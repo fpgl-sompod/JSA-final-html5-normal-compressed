@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jurassic Sniper 3D</title>
+
+    <meta name="ad.size" content="width=300,height=250" />
+
+    <meta name="viewport" content="user-scalable=no; width=device-width, initial-scale=1.0"/>
+
+    <!--https://developer.apple.com/library/safari/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- force webkit on 360 -->
+    <meta name="renderer" content="webkit" />
+    <meta name="force-rendering" content="webkit" />
+    <!-- force edge on IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <!-- force full screen on some browser -->
+    <meta name="full-screen" content="yes" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="360-fullscreen" content="true" />
+
+    <!-- force screen orientation on some browser -->
+    <!-- <meta name="screen-orientation" content="portrait"/>
+    <meta name="x5-orientation" content="portrait"> -->
+
+    <meta name="browsermode" content="application" />
+    <meta name="x5-page-mode" content="app" />
+
+    <style>
+        .center {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: auto auto;
+            vertical-align: middle;
+            position: absolute;
+        }
+
+        html, body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            display: flex;
+        }
+
+        .parent {
+            margin: auto;
+            background-color: #000;
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+
+        video {
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            top: 50%;
+            left: 50%;
+            object-fit: cover;
+            z-index: 10;
+            height: 100vh;
+            width: auto;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+            video::-webkit-media-controls {
+                display: none !important;
+            }
+
+        canvas {
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            position: absolute;
+            z-index: 111;
+        }
+
+        #icon {
+            top: 10px;
+            left: 10px;
+            -webkit-transform: scale(0.4);
+            transform: scale(0.4);
+            transform-origin: left top;
+            backface-visibility: hidden;
+            position: absolute;
+            z-index: 500;
+        }
+
+        #scope {
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            animation-name: scope-anim-reverse;
+            animation-duration: 7s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            z-index: 112;
+        }
+
+        @keyframes scope-anim-reverse {
+            0% {
+                transform: translate(0%,50%);
+            }
+
+            20% {
+                transform: translate(180%,120%);
+            }
+
+            40% {
+                transform: translate(-50%,150%);
+            }
+
+            60% {
+                transform: translate(180%,120%);
+            }
+
+            80% {
+                transform: translate(130%,150%);
+            }
+
+            100% {
+                transform: translate(0%,50%);
+            }
+        }
+
+        .btn {
+			position: absolute;
+			width:200px;
+			z-index:200;
+			padding: 0.7em 2.1em 0.8em;
+			border-radius: 10px;
+			margin: 8px 8px 8px 8px;
+			animation-name: btn-anim-reverse;
+			animation-duration: 0.5s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+			left: 50%;
+			top: 90%;
+			-webkit-transform: translate(-50%, -50%);
+			color: #fbdedb;
+			font-family: sans-serif;
+			font-weight: 800;
+			font-size: 1.2em;
+			text-transform: uppercase;
+			text-align: center;
+			text-decoration: none;
+			-webkit-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+			-moz-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+			box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+			
+		}
+		.btn2 {
+			position: absolute;
+			width:70px;
+			z-index:200;
+			padding: 0.8em 1em 1em;
+			border-radius: 6px;
+			margin: 8px 8px 8px 8px;
+			animation-name: btn-anim-reverse;
+			animation-duration: 0.5s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+			left: 80%;
+			top: 5%;
+			-webkit-transform: translate(-50%, -50%);
+			color: #fbdedb;
+			font-family: sans-serif;
+			font-weight: 700;
+			font-size: 0.6em;
+			text-transform: uppercase;
+			text-align: center;
+			text-decoration: none;
+			-webkit-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+			-moz-box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+			box-shadow: 0em -0.3rem 0em rgba(0, 0, 0, 0.1) inset;
+		}
+		@keyframes btn-anim-reverse {
+			0% {
+				-webkit-transform: translate(-50%, -50%);
+			}
+			50% {
+				-webkit-transform: translate(-50%, -60%);
+			}
+			100% {
+				-webkit-transform: translate(-50%, -50%);
+			}
+		}
+		.btn:hover, .btn:focus {
+			opacity: 0.8;
+		}
+		.btn:active {
+			-webkit-transform: scale(0.80);
+			-moz-transform: scale(0.80);
+			-ms-transform: scale(0.80);
+			-o-transform: scale(0.80);
+			transform: scale(0.80);
+		}
+		.btn.block {
+			display: block !important;
+		}
+
+		.red {
+			background-color: #d55050;
+		}
+
+        .disable-select {
+            user-select: none; /* supported by Chrome and Opera */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+        }
+    </style>
+    <script>
+        var clickTag = "https://play.google.com/store/apps/details?id=com.funvai.jseasniper";
+        if (/android/i.test(navigator.userAgent)) clickTag = "https://play.google.com/store/apps/details?id=com.funvai.jseasniper";
+        else if (/iPad|iPhone|iPod/.test(navigator.userAgent)) clickTag = "https://apps.apple.com/app/jurassic-sniper-3d/id1535441769";
+    </script>
+
+    <script>
+        var state = 0;
+        var installNow = false;
+        var redirectLink;
+
+
+
+        var currOrient = "";
+        window.oncontextmenu = function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+        };
+        window.onresize = function (event) {
+            handleSize();
+        };
+        function gameSettings() {
+            redirectLink = clickTag;
+        }
+
+        if (window.mraid) mraid.addEventListener("orientationchange", Orientation);
+        else window.addEventListener("orientationchange", function (event) {
+            console.log("the orientation of the device is now " + event.target.screen.orientation.angle);
+            handleSize();
+        });
+
+        function handleSize() {
+            var vid = document.getElementById('gifimage');
+            vid.style.width = 300;
+            vid.style.height = 250;
+        }
+
+        function resetCSS() {
+        }
+    </script>
+    <script>
+        var initTime = new Date().getTime();
+        var gameover = 0, gameTimeout;
+        var clickcount = 0;
+        function clickthrough(event) {
+            event.preventDefault();
+            if (clickcount < 1) {
+                if (gameover != 1) {
+                    var newTime = new Date().getTime();
+                    gameover = 1;
+                    //if(newTime >= initTime+500)
+                    //{
+                    initTime = new Date().getTime();
+                    console.log("state 00: " + initTime);
+                    console.log("state val: " + state);
+                    missedStart = 0;
+
+                    var image2link = "Part2.gif";
+                    var image2source = document.getElementById('gifimage2');
+                    image2source.setAttribute('src', image2link);
+                    var vid = document.getElementById('gifimage2');
+                    vid.style.visibility = 'visible';
+                    document.getElementById("btn").className = "btn2 red";
+                    handleSize();
+                    state++;
+
+                    if (gameTimeout) clearTimeout(gameTimeout);
+                    gameTimeout = setTimeout(function () {
+                        vid.style.visibility = 'hidden';
+                        gameover = 0;
+                        document.getElementById("btn").className = "btn2 red";
+                        handleSize();
+                    }, 2350);
+                }
+                //if (state == 1) {
+                    var btn = document.getElementById("btn");
+                    btn.className = "btn2 red";
+                    btn.style.opacity = 1;
+                    btn.style.zIndex = 200;
+					btn.style.visibility = 'visible';
+                //}
+                ++clickcount;
+            } else if (clickcount == 1){
+                btnevent(event);
+            }
+
+        }
+
+        function btnevent(event) {
+            event.preventDefault();
+            console.log("redir");
+            if (window.mraid) {
+                mraid.open(redirectLink);
+            } else {
+                location.href = redirectLink;
+            }
+        }
+    </script>
+
+    <script>
+        
+        
+        //var image1link = "GKW.gif";
+        //
+        //
+        //function SetImageUrl() {
+        //    var image1source = document.getElementById('gifimage');
+        //
+        //    image1source.setAttribute('src', image1link);
+        //
+        //    
+        //}
+        
+    </script>
+</head>
+<body style = "background-color: #2d88b3;">
+    <div class="disable-select">
+        <div id="gamebox" class="parent" style="position:absolute; background-color: #2d88b3; width: 300px; height: 250px;">
+            <a href="" id="btn" style="opacity: 0.5; visibility:hidden;" onclick="btnevent(event)">Install Now</a>
+            <img id="gifimage" class="center" style="visibility: visible;" src="GKW.gif" alt="scope" />
+            <img id="gifimage2" class="center" style="visibility: hidden;" src="Part2.gif" alt="scope" />
+            <canvas id="gameCanvas" onclick="clickthrough(event)">
+            </canvas>
+            <div class="centered">
+            </div>
+        </div>
+    </div>
+    <script>
+        //SetImageUrl();
+
+
+        if (window.mraid) {
+            var b = function () {
+                mraid.addEventListener('viewableChange', viewableChangeHandler);
+                // The isViewable method returns whether the ad container is viewable on the screen.
+                if (mraid.isViewable()) {
+                    showMyAd();
+                }
+            };
+            "loading" === window.mraid.getState() ? (window.mraid.addEventListener("ready", b), console.log("loading mraid")) : (b(), console.log("ready mraid"));
+        }
+        else {
+            showMyAd();
+        }
+
+        function showMyAd() {
+            gameSettings();
+            handleSize();
+        }
+
+        function onBlur() {
+            console.log("lefttab");
+
+        };
+        function onFocus() {
+            console.log("came back");
+
+        };
+
+        if (!window.mraid) {
+            if (/*@cc_on!@*/false) { // check for Internet Explorer
+                document.onfocusin = onFocus;
+                document.onfocusout = onBlur;
+            } else {
+                window.onfocus = onFocus;
+                window.onblur = onBlur;
+            }
+        }
+        function viewableChangeHandler(viewable) {
+            if (viewable) {
+                // If the ad is viewable, show the ad:
+                onFocus();
+            } else {
+                // If not, pause the ad.
+                onBlur();
+            }
+        }
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scopeImg = document.getElementById('scope');
+        var vidSource = document.getElementById('gifimage');
+        var vidSource2 = document.getElementById('gifimage2');
+
+		canvas.width = 300;
+		canvas.height = 250;
+
+        canvas.addEventListener('touchstart', function (e) {
+        });
+        window.addEventListener('touchend', function (e) {
+        });
+    </script>
+</body>
+</html>
